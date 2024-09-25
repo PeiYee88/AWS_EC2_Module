@@ -23,7 +23,7 @@ module "ec2" {
   ec2_id_without_name                  = each.key
   for_each                             = { for file in local.instance_id : file => local.instance_config[file] }
   instance_count                       = try(each.value.instance_count, 1)
-  ami                                  = try(module.launch_template[each.value.launch_template_filename].id, null) == null ? try(each.value.ami, null) : null
+  ami                                  = try(each.value.ami, null)
   instance_type                        = try(each.value.instance_type, "")
   associate_public_ip_address          = try(each.value.associate_public_ip_address, null)
   availability_zone                    = try(each.value.availability_zone, null)
