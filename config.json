@@ -1,0 +1,5 @@
+{
+    "environment": "tpra-staging",
+    "region": "us-east-1",
+    "current_type": "ec2"
+}
