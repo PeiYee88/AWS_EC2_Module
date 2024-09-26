@@ -31,7 +31,6 @@ resource "aws_instance" "this" {
       user_data, 
       user_data_replace_on_change
     ]
-
   }
 
   tags = (var.instance_count == 1 ? var.tags : {
@@ -70,7 +69,7 @@ resource "aws_instance" "this" {
     for_each = try(var.cpu_options, {})
 
     content {
-      amd_sev_snp      = try(cpu_options.value.amd_sev_snp, null) == "" ? "disabled" : null
+      amd_sev_snp      = try(cpu_options.value.amd_sev_snp, null)
       core_count       = try(cpu_options.value.core_count, null)
       threads_per_core = try(cpu_options.value.threads_per_core, null)
     }
@@ -156,10 +155,10 @@ resource "aws_instance" "this" {
     for_each = try(var.metadata_options, {})
 
     content {
-      http_endpoint               = try(metadata_options.value.http_endpoint, "enabled")
-      http_protocol_ipv6          = try(metadata_options.value.http_protocol_ipv6, "disabled")
-      http_tokens                 = try(metadata_options.value.http_tokens, "optional")
-      http_put_response_hop_limit = try(metadata_options.value.http_put_response_hop_limit, 1)
+      http_endpoint               = try(metadata_options.value.http_endpoint, null)
+      http_protocol_ipv6          = try(metadata_options.value.http_protocol_ipv6, null)
+      http_tokens                 = try(metadata_options.value.http_tokens, null)
+      http_put_response_hop_limit = try(metadata_options.value.http_put_response_hop_limit, null)
       instance_metadata_tags      = try(metadata_options.value.instance_metadata_tags, null)
     }
   }
@@ -169,7 +168,7 @@ resource "aws_instance" "this" {
     for_each = try(var.network_interface, {})
 
     content {
-      delete_on_termination = try(network_interface.value.delete_on_termination, false)
+      delete_on_termination = try(network_interface.value.delete_on_termination, null)
       device_index          = try(network_interface.value.device_index, null)
       network_card_index    = try(network_interface.value.network_card_index, null)
       network_interface_id  = try(network_interface.value.network_interface_id, null)

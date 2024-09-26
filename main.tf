@@ -11,7 +11,7 @@ locals {
 locals {
   ec2_directory  = "${local.environment}/${local.region}/ec2"
   ec2_yaml_files = fileset("${path.module}/${local.ec2_directory}", "*.yaml")
-  instance_id    = [for file in local.ec2_yaml_files : split(".yaml", file)[0]]
+  instance_filename    = [for file in local.ec2_yaml_files : split(".yaml", file)[0]]
   instance_config = {
     for file in local.ec2_yaml_files :
     split(".yaml", file)[0] => yamldecode(file("${path.module}/${local.ec2_directory}/${file}"))
@@ -21,7 +21,7 @@ locals {
 module "ec2" {
   source                               = "./modules/ec2"
   ec2_id_without_name                  = each.key
-  for_each                             = { for file in local.instance_id : file => local.instance_config[file] }
+  for_each                             = { for file in local.instance_filename : file => local.instance_config[file] }
   instance_count                       = try(each.value.instance_count, 1)
   ami                                  = try(each.value.ami, null)
   instance_type                        = try(each.value.instance_type, "")
@@ -78,5 +78,4 @@ module "ec2" {
   ebs_block_device       = try(each.value.ebs_block_device, [])
   ephemeral_block_device = try(each.value.ephemeral_block_device, [])
   root_block_device      = try(each.value.root_block_device, {})
-
 }
