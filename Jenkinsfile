@@ -46,8 +46,6 @@ pipeline {
                 withFileParameter('FILE') {
                     sh "cat \$FILE > ${env.ENVIRONMENT}/${env.REGION}/${env.TYPE}/${env.TYPE}.yaml"
                 }
-
-                sh "terraform apply -auto-approve -state=\"${env.ENVIRONMENT}/${env.REGION}/terraform.tfstate\""
             }
         }
 
